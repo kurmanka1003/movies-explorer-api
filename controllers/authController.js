@@ -9,21 +9,27 @@ const { responseMessage } = require('../utils/config');
 
 const { CREATED_STATUS, SUCCESS_STATUS } = require('../utils/constants');
 
+const BadRequestError = require('../utils/errors/badRequestError');
+const UnauthorizedError = require('../utils/errors/unauthorizedError');
+const ConflictError = require('../utils/errors/conflictError');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // POST /signup
+
 const signup = (req, res, next) => {
   const {
+    name,
     email,
     password,
-    name,
   } = req.body;
 
-  bcrypt.hash(password, 10)
+  bcrypt
+    .hash(password, 10)
     .then((hash) => User.create({
+      name,
       email,
       password: hash,
-      name,
     }))
     .then((user) => {
       responseMessage(res, CREATED_STATUS, {
@@ -32,26 +38,45 @@ const signup = (req, res, next) => {
         email: user.email,
       });
     })
+    .catch((err) => {
+      if (err instanceof Error.ValidationError) {
+        return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+      }
+
+      if (err.code === 11000) {
+        return next(new ConflictError('Пользователь с таким e-mail зарегистрирован'));
+      }
+
+      return next(err);
+    })
     .catch(next);
 };
 
 // POST /signin
 const signin = (req, res, next) => {
   const { email, password } = req.body;
-
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'rumiya-secret-key', {
-        expiresIn: '7d',
-      });
-
-      res.cookie('jwtToken', token, {
-        maxAge: 3600,
-        httpOnly: true,
-      });
-      return res.send({ jwtToken: token });
-    })
-    .catch(next);
+  User.findOne({ email })
+    .select('+password')
+    .orFail()
+    .then((user) => bcrypt.compare(password, user.password).then((match) => {
+      if (match) {
+        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'rumiya-secret-key', {
+          expiresIn: '7d',
+        });
+        res.cookie('jwtToken', token, {
+          maxAge: 3600,
+          httpOnly: true,
+        });
+        return res.send({ jwtToken: token });
+      }
+      throw new UnauthorizedError('Переданы неверный email или пароль');
+    }))
+    .catch((err) => {
+      if (err instanceof Error.DocumentNotFoundError) {
+        return next(new UnauthorizedError('Переданы неверный email или пароль'));
+      }
+      return next(err);
+    });
 };
 
 // POST /signout
