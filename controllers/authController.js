@@ -48,8 +48,8 @@ const signin = (req, res, next) => {
       res.cookie('jwt', token, {
         maxAge: 3600,
         httpOnly: true,
-      })
-        .send({ message: 'Авторизация прошла успешно' });
+      });
+      return res.send({ jwtToken: token });
     })
     .catch(next);
 };
