@@ -45,7 +45,7 @@ const signin = (req, res, next) => {
         expiresIn: '7d',
       });
 
-      res.cookie('jwt', token, {
+      res.cookie('jwtToken', token, {
         maxAge: 3600,
         httpOnly: true,
       });
@@ -57,7 +57,7 @@ const signin = (req, res, next) => {
 // POST /signout
 const signout = (req, res) => {
   try {
-    res.clearCookie('jwt');
+    res.clearCookie('jwtToken');
     return responseMessage(res, SUCCESS_STATUS, { message: 'Вы успешно вышли' });
   } catch (err) {
     return new Error('Произошла ошибка при попытке выйти из акканута');
