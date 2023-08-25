@@ -1,10 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-
+const cors = require('./middlewares/cors');
 const errors = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -19,11 +18,7 @@ const app = express();
 
 app.use(requestLogger);
 
-app.use(cors({
-  origin: 'https://filmfinder.nomoredomainsicu.ru',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(cors);
 
 app.use(express.json());
 
