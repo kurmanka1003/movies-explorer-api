@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const errors = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { limiter } = require('./utils/config');
 
 const { PORT = 3000 } = process.env;
 
@@ -29,6 +30,8 @@ app.use(express.json());
 app.use(helmet());
 
 app.use(cookieParser());
+
+app.use(limiter);
 
 app.use(require('./routes/index'));
 
