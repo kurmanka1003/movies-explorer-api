@@ -1,11 +1,11 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 
 const errors = require('./middlewares/errorHandler');
-const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
@@ -17,9 +17,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
 
 const app = express();
 
-app.use(cors);
-
 app.use(requestLogger);
+
+app.use(cors({
+  origin: 'https://api.filmfinder.nomoreparties.sbs',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use(express.json());
 
