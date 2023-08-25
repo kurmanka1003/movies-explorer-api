@@ -1,7 +1,7 @@
 const allowedCors = [
   'http://localhost:3000',
-  'https://filmfinder.nomoredomainsicu.ru/profile',
-  'https://filmfinder.nomoredomainsicu.ru/profile',
+  'https://filmfinder.nomoredomainsicu.ru',
+  'https://filmfinder.nomoredomainsicu.ru',
 ];
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
