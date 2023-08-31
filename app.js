@@ -20,7 +20,7 @@ const app = express();
 app.use(requestLogger);
 
 app.use(cors({
-  origin: 'https://filmfinder.nomoredomainsicu.ru',
+  origin: ['https://filmfinder.nomoredomainsicu.ru', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
