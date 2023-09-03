@@ -1,8 +1,26 @@
-# movies-explorer-api
-Бэкенд дипломной работы в Яндекс.Практикум
+# Дипломный проект Movies-Explorer: backend
+Бэкенд проекта Movies-Explorer создан в рамках диппломной работы в [Яндекс.Практикум](https://praktikum.yandex.ru/) и посвящен сервису, в котором можно найти фильмы по запросу и сохранить в личном кабинете.
 
-## Ссылки на проект
+### Технологии:
+* express.
+* express-rate-limit.
+* winston.
+* helmet.
+* jsonwebtoken.
+* cors.
+* celebrate.
+* dotenv.
+* cookie-parser.
+* validator.
+* bcryptjs.
+
+### Ссылки на проект
 
 IP 158.160.67.146
 
-https://api.filmfinder.nomoreparties.sbs
+Frontend https://filmfinder.nomoredomainsicu.ru
+
+Backend https://api.filmfinder.nomoreparties.sbs
+
+Pull-request https://github.com/kurmanka1003/movies-explorer-frontend/pull/2
+
